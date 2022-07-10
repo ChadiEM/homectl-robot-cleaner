@@ -1,6 +1,5 @@
 import logging
 import os
-from datetime import datetime
 
 import requests
 
@@ -13,9 +12,6 @@ from influx_client import InfluxClient
 ROWENTA_HOSTNAME = os.getenv('ROWENTA_HOSTNAME')
 
 logger = logging.getLogger(__name__)
-
-START = datetime.today().replace(hour=10, minute=0, second=0, microsecond=0)  # 10 am
-END = datetime.today().replace(hour=22, minute=0, second=0, microsecond=0)  # 10 pm
 
 
 def clean(influx_client: InfluxClient):

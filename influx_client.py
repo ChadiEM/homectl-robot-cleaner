@@ -8,8 +8,8 @@ from influxdb_client import InfluxDBClient, Point
 class InfluxClient:
     def __init__(self):
         self.__client = InfluxDBClient(url=os.environ.get('INFLUX_ENDPOINT'),
-                                token=os.environ.get('INFLUX_TOKEN'),
-                                org=os.environ.get('INFLUX_ORG'))
+                                       token=os.environ.get('INFLUX_TOKEN'),
+                                       org=os.environ.get('INFLUX_ORG'))
 
         self.__bucket = os.environ.get('INFLUX_BUCKET')
 
@@ -29,6 +29,9 @@ class InfluxClient:
     def mark_cleaned(self):
         self.__write_api.write(bucket=self.__bucket, record=(Point("home_control").field("robot-clean", True)))
 
-    def __exit__(self):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
         self.__write_api.close()
         self.__client.close()

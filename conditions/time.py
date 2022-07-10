@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from cleaner import START, END
 from condition import Condition
+from conditions.time_bounds import START, END
 
 
 class Time(Condition):

@@ -8,7 +8,8 @@ WORKDIR /work
 ADD requirements.txt .
 RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 
-ADD *.py conditions ./
+ADD *.py ./
+ADD conditions ./conditions/
 
 USER user
 ENTRYPOINT PYTHONUNBUFFERED=1 python main.py

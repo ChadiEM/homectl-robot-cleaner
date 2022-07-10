@@ -12,7 +12,7 @@ class AreHostsOutside(Condition):
     def is_satisfied(self):
         ips = HOME_IPS.split(',')
         for ip in ips:
-            response = requests.get(f'http://{NETWORK_SCANNER_ENDPOINT}/network/ip/{ip}').json()
+            response = requests.get(f'{NETWORK_SCANNER_ENDPOINT}/network/ip/{ip}').json()
             if response['status'] == 'up':
                 return False
         return True

@@ -17,8 +17,8 @@ class InfluxClient:
         self.__write_api = self.__client.write_api(write_options=influxdb_client.client.write_api.SYNCHRONOUS)
 
     def has_cleaned(self, start: datetime, end: datetime):
-        start_ts = int(start.timestamp() * 1e9)
-        stop_ts = int(end.timestamp() * 1e9)
+        start_ts = int(start.timestamp() * 1e6)
+        stop_ts = int(end.timestamp() * 1e6)
 
         result = self.__query_api.query(f"""from(bucket:"{self.__bucket}")
         |> range(start: {start_ts}, stop: {stop_ts})

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def clean(influx_client: InfluxClient):
     response = requests.get(
-        f'http://{ROWENTA_HOSTNAME}:8080/set/clean_all?cleaning_parameter_set=0&cleaning_strategy_mode=4')
+        f'http://{ROWENTA_HOSTNAME}:8080/set/clean_map?map_id=3')
 
     if response.ok:
         influx_client.mark_cleaned()

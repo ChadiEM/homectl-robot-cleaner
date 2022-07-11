@@ -17,14 +17,14 @@ class InfluxClient:
         self.__write_api = self.__client.write_api(write_options=influxdb_client.client.write_api.SYNCHRONOUS)
 
     def has_cleaned(self, start: datetime, end: datetime):
-        start_ts = int(start.timestamp() * 1e6)
-        stop_ts = int(end.timestamp() * 1e6)
+        start_ts = int(start.timestamp())
+        stop_ts = int(end.timestamp())
 
         result = self.__query_api.query(f"""from(bucket:"{self.__bucket}")
         |> range(start: {start_ts}, stop: {stop_ts})
         |> filter(fn:(r) => r._measurement == "home_control" and r._field == "robot-clean")""")
 
-        return len(result) == 0
+        return len(result) > 0
 
     def mark_cleaned(self):
         self.__write_api.write(bucket=self.__bucket, record=(Point("home_control").field("robot-clean", True)))

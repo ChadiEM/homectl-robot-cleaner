@@ -7,4 +7,4 @@ class NotCleanedToday(Condition):
         self.__influx_client = influx_client
 
     def is_satisfied(self):
-        return self.__influx_client.has_cleaned(START, END)
+        return not self.__influx_client.has_cleaned(START, END)

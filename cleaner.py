@@ -21,7 +21,7 @@ def find_task(command_id):
     if response.ok:
         history_arr = response.json()['task_history']
 
-        for task in history_arr:
+        for task in reversed(history_arr):
             if task['source_id'] == command_id:
                 return task
 

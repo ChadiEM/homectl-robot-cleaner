@@ -1,6 +1,6 @@
 FROM python:3.11-alpine
 
-RUN apk upgrade && apk add nmap tzdata
+RUN apk upgrade && apk add tzdata
 
 RUN addgroup usergroup && adduser -D user -G usergroup && mkdir /work
 WORKDIR /work

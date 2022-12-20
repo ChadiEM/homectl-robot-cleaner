@@ -52,12 +52,14 @@ def clean(influx_client: InfluxClient, conditions: list[Condition]):
     response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/clean_map?map_id=3')
 
     if response.ok:
+        logger.info(f'Started cleaning...')
+
         cmd_id = response.json()['cmd_id']
 
         while True:
             for condition in conditions:
                 if not condition.is_satisfied():
-                    logger.info(f'Condition {type(condition).__name__} not satisfied. Interrupting.')
+                    logger.info(f'Condition {type(condition).__name__} not satisfied. Cleaning interrupted.')
                     requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/go_home')
                     return
 
@@ -72,6 +74,8 @@ def clean(influx_client: InfluxClient, conditions: list[Condition]):
 
 
 def start_if_needed():
+    logger.info(f'Started.')
+
     with InfluxClient() as influx_client:
         conditions: list[Condition] = [
             Time(),

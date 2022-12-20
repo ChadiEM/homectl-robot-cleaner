@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from datetime import date
 
 import requests
 
@@ -15,6 +16,12 @@ ROWENTA_HOSTNAME = os.getenv('ROWENTA_HOSTNAME')
 logger = logging.getLogger(__name__)
 
 
+def is_today(task):
+    start_time = task['start_time']
+    today = date.today()
+    return today.year == start_time['year'] and today.month == start_time['month'] and today.day == start_time['day']
+
+
 def find_task(command_id):
     response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/get/task_history')
 
@@ -22,7 +29,7 @@ def find_task(command_id):
         history_arr = response.json()['task_history']
 
         for task in reversed(history_arr):
-            if task['source_id'] == command_id:
+            if task['source_id'] == command_id and is_today(task):
                 return task
 
     return None
@@ -31,8 +38,7 @@ def find_task(command_id):
 def is_finished(command_id):
     task = find_task(command_id)
     if task is None:
-        # shouldn't happen, but just in case
-        return True
+        return False
 
     state = task['state']
 

@@ -1,2 +1,2 @@
-flake8==4.0.1
+flake8==6.0.0
 zest.releaser==7.2.0

@@ -1,2 +1,2 @@
-influxdb_client
-requests
+influxdb-client==1.30.0
+requests==2.28.1

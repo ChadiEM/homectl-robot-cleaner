@@ -1,2 +1,2 @@
-flake8
-zest.releaser
+flake8==4.0.1
+zest.releaser==6.22.2

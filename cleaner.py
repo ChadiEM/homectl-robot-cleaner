@@ -8,6 +8,7 @@ import requests
 from condition import Condition
 from conditions.hosts_outside import AreHostsOutside
 from conditions.not_cleaned_today import NotCleanedToday
+from conditions.someone_home_last_day import SomeoneHomeInTheLastDay
 from conditions.time import Time
 from influx_client import InfluxClient
 
@@ -80,7 +81,8 @@ def start_if_needed():
         conditions: list[Condition] = [
             Time(),
             NotCleanedToday(influx_client),
-            AreHostsOutside()
+            AreHostsOutside(),
+            SomeoneHomeInTheLastDay()
         ]
 
         running_conditions: list[Condition] = [

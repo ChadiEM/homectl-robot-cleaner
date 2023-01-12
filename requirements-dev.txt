@@ -1,2 +1,2 @@
 flake8==4.0.1
-zest.releaser==6.22.2
+zest.releaser==7.2.0

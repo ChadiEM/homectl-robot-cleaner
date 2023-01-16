@@ -5,5 +5,10 @@
   ],
   "labels": [
     "dependencies"
-  ]
+  ],
+  "pip_requirements": {
+    "fileMatch": [
+      "^requirements(\\-dev)?.txt$"
+    ]
+  }
 }

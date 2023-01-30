@@ -9,10 +9,13 @@ NETWORK_SCANNER_ENDPOINT = os.getenv('NETWORK_SCANNER_ENDPOINT')
 
 
 class AreHostsOutside(Condition):
-    def is_satisfied(self):
+    def is_satisfied(self) -> bool:
         ips = HOME_IPS.split(',')
         for ip in ips:
             response = requests.get(f'{NETWORK_SCANNER_ENDPOINT}/network/ip/{ip}').json()
             if response['status'] == 'up':
                 return False
+        return True
+
+    def should_recheck(self) -> bool:
         return True

@@ -1,3 +1,4 @@
+import abc
 import os
 from datetime import datetime
 
@@ -5,7 +6,17 @@ import influxdb_client.client.write_api
 from influxdb_client import InfluxDBClient, Point
 
 
-class InfluxClient:
+class InfluxClient(abc.ABC):
+    @abc.abstractmethod
+    def has_cleaned(self, start: datetime, end: datetime) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def mark_cleaned(self) -> None:
+        pass
+
+
+class InfluxAPIClient(InfluxClient):
     def __init__(self):
         self.__client = InfluxDBClient(url=os.environ.get('INFLUX_ENDPOINT'),
                                        token=os.environ.get('INFLUX_TOKEN'),

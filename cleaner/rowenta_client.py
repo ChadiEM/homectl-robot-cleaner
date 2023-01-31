@@ -1,7 +1,9 @@
+import abc
 import logging
 import os
 import time
 from datetime import date
+from typing import Callable
 
 import requests
 
@@ -19,7 +21,13 @@ def _is_today(task):
         and today.day == start_time['day']
 
 
-class RowentaClient:
+class RowentaClient(abc.ABC):
+    @abc.abstractmethod
+    def clean(self, done_fn: Callable[[], None], conditions: list[Condition]):
+        pass
+
+
+class RequestsRowentaClient(RowentaClient):
     def _find_task(self, command_id):
         response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/get/task_history')
 
@@ -44,7 +52,7 @@ class RowentaClient:
 
         return False
 
-    def clean(self, done, conditions: list[Condition]):
+    def clean(self, done_fn: Callable[[], None], conditions: list[Condition]):
         for condition in conditions:
             if not condition.is_satisfied():
                 logger.info(f'Condition {type(condition).__name__} not satisfied. Skipping.')
@@ -73,4 +81,4 @@ class RowentaClient:
 
             logger.info('Cleaning finished. See you tomorrow!')
 
-            done()
+            done_fn()

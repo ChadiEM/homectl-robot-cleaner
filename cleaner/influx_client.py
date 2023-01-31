@@ -38,7 +38,7 @@ class InfluxAPIClient(InfluxClient):
         return len(result) > 0
 
     def mark_cleaned(self):
-        self.__write_api.write(bucket=self.__bucket, record=(Point("home_control").field("robot-clean", True)))
+        self.__write_api.write(bucket=self.__bucket, record=(Point('home_control').field('robot-clean', True)))
 
     def __enter__(self):
         return self

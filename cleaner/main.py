@@ -13,4 +13,4 @@ if __name__ == '__main__':
     logger.info('Started.')
 
     with InfluxAPIClient() as influx_client:
-        robot_cleaner.start_if_needed(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())
+        robot_cleaner.start(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())

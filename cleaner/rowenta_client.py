@@ -3,7 +3,7 @@ import logging
 import os
 import time
 from datetime import date
-from typing import Callable
+from enum import Enum
 
 import requests
 
@@ -23,25 +23,37 @@ def _is_today(task):
 
 class RowentaClient(abc.ABC):
     @abc.abstractmethod
-    def clean(self, done_fn: Callable[[], None], conditions: list[Condition]):
+    def clean_house(self) -> int:
+        pass
+
+    @abc.abstractmethod
+    def go_home(self) -> None:
+        pass
+
+    @abc.abstractmethod
+    def is_task_finished(self, cmd_id: int) -> bool:
         pass
 
 
 class RequestsRowentaClient(RowentaClient):
     def _find_task(self, command_id):
-        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/get/task_history')
-
+        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/get/task_history', timeout=60)
         if response.ok:
             history_arr = response.json()['task_history']
-
             for task in reversed(history_arr):
                 if task['source_id'] == command_id and _is_today(task):
                     return task
-
         return None
 
-    def _is_finished(self, command_id):
-        task = self._find_task(command_id)
+    def clean_house(self) -> int:
+        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/clean_map?map_id=3', timeout=60)
+        return response.json()['cmd_id']
+
+    def go_home(self) -> None:
+        requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/go_home', timeout=60)
+
+    def is_task_finished(self, cmd_id: int) -> bool:
+        task = self._find_task(cmd_id)
         if task is None:
             return False
 
@@ -52,33 +64,40 @@ class RequestsRowentaClient(RowentaClient):
 
         return False
 
-    def clean(self, done_fn: Callable[[], None], conditions: list[Condition]):
+
+class CleaningResult(Enum):
+    SUCCESS = 1
+    FAILURE = 2
+
+
+class RowentaCleaner:
+    def __init__(self, rowenta_client: RowentaClient):
+        self.rowenta_client = rowenta_client
+
+    def clean(self, conditions: list[Condition]) -> CleaningResult:
         for condition in conditions:
             if not condition.is_satisfied():
                 logger.info(f'Condition {type(condition).__name__} not satisfied. Skipping.')
-                return
+                return CleaningResult.FAILURE
 
         running_conditions = filter(lambda c: c.should_recheck(), conditions)
 
-        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/clean_map?map_id=3')
+        cmd_id = self.rowenta_client.clean_house()
 
-        if response.ok:
-            logger.info('Started cleaning...')
+        logger.info('Started cleaning...')
 
-            cmd_id = response.json()['cmd_id']
+        while True:
+            for condition in running_conditions:
+                if not condition.is_satisfied():
+                    logger.info(f'Condition {type(condition).__name__} not satisfied. Cleaning interrupted.')
+                    self.rowenta_client.go_home()
+                    return CleaningResult.FAILURE
 
-            while True:
-                for condition in running_conditions:
-                    if not condition.is_satisfied():
-                        logger.info(f'Condition {type(condition).__name__} not satisfied. Cleaning interrupted.')
-                        requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/go_home')
-                        return
+            if self.rowenta_client.is_task_finished(cmd_id):
+                break
 
-                if self._is_finished(cmd_id):
-                    break
+            time.sleep(10)
 
-                time.sleep(10)
+        logger.info('Cleaning finished. See you tomorrow!')
 
-            logger.info('Cleaning finished. See you tomorrow!')
-
-            done_fn()
+        return CleaningResult.SUCCESS

@@ -4,11 +4,11 @@ from cleaner.conditions.not_cleaned_today import NotCleanedToday
 from cleaner.conditions.someone_home_last_day import SomeoneHomeInTheLastDay
 from cleaner.conditions.time import Time
 from cleaner.influx_client import InfluxClient
-from cleaner.rowenta_client import RowentaClient
+from cleaner.rowenta_client import RowentaClient, RowentaCleaner, CleaningResult
 from cleaner.scanner import NetworkScanner
 
 
-def start_if_needed(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_client: RowentaClient):
+def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_client: RowentaClient):
     conditions: list[Condition] = [
         Time(),
         NotCleanedToday(influx_client),
@@ -16,7 +16,9 @@ def start_if_needed(influx_client: InfluxClient, network_scanner: NetworkScanner
         SomeoneHomeInTheLastDay(network_scanner)
     ]
 
-    def done():
-        influx_client.mark_cleaned()
+    rowenta_cleaner = RowentaCleaner(rowenta_client)
 
-    rowenta_client.clean(done, conditions)
+    cleaning_result = rowenta_cleaner.clean(conditions)
+
+    if cleaning_result == CleaningResult.SUCCESS:
+        influx_client.mark_cleaned()

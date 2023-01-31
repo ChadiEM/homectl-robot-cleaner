@@ -2,7 +2,7 @@ import os
 
 import requests
 
-from condition import Condition
+from cleaner.condition import Condition
 
 HOME_IPS = os.getenv('HOME_IPS', '')
 NETWORK_SCANNER_ENDPOINT = os.getenv('NETWORK_SCANNER_ENDPOINT')

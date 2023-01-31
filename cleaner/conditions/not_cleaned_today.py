@@ -1,6 +1,6 @@
-from condition import Condition
-from conditions.time_bounds import START, END
-from influx_client import InfluxClient
+from cleaner.condition import Condition
+from cleaner.conditions.time_bounds import START, END
+from cleaner.influx_client import InfluxClient
 
 
 class NotCleanedToday(Condition):

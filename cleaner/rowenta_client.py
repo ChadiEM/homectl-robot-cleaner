@@ -5,7 +5,7 @@ from datetime import date
 
 import requests
 
-from condition import Condition
+from cleaner.condition import Condition
 
 ROWENTA_HOSTNAME = os.getenv('ROWENTA_HOSTNAME')
 logger = logging.getLogger(__name__)

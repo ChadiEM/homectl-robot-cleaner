@@ -8,8 +8,7 @@ WORKDIR /work
 ADD requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-ADD *.py ./
-ADD conditions ./conditions/
+ADD cleaner ./cleaner
 
 USER user
-ENTRYPOINT PYTHONUNBUFFERED=1 python main.py
+ENTRYPOINT PYTHONUNBUFFERED=1 python cleaner/main.py

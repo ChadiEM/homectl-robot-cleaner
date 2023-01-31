@@ -1,12 +1,12 @@
 import logging
 
-from condition import Condition
-from conditions.hosts_outside import AreHostsOutside
-from conditions.not_cleaned_today import NotCleanedToday
-from conditions.someone_home_last_day import SomeoneHomeInTheLastDay
-from conditions.time import Time
-from influx_client import InfluxClient
-from rowenta_client import RowentaClient
+from cleaner.condition import Condition
+from cleaner.conditions.hosts_outside import AreHostsOutside
+from cleaner.conditions.not_cleaned_today import NotCleanedToday
+from cleaner.conditions.someone_home_last_day import SomeoneHomeInTheLastDay
+from cleaner.conditions.time import Time
+from cleaner.influx_client import InfluxClient
+from cleaner.rowenta_client import RowentaClient
 
 logger = logging.getLogger(__name__)
 

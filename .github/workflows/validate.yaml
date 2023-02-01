@@ -19,3 +19,5 @@ jobs:
         run: flake8 cleaner --show-source --statistics
       - name: mypy
         run: mypy cleaner
+      - name: Pytest
+        run: pytest tests

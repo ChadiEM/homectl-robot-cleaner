@@ -1,12 +1,16 @@
-from datetime import datetime
+import datetime
 
 from cleaner.condition import Condition
 from cleaner.conditions.time_bounds import START, END
 
 
 class Time(Condition):
-    def is_satisfied(self) -> bool:
-        return START <= datetime.now() <= END
+    def __init__(self):
+        super().__init__(False)
 
-    def should_recheck(self) -> bool:
-        return False
+    def is_satisfied(self) -> bool:
+        return START <= self.now() <= END
+
+    @staticmethod
+    def now() -> datetime.time:
+        return datetime.datetime.now().time()

@@ -1,6 +1,7 @@
 import abc
+import datetime
 import os
-from datetime import datetime
+from datetime import time
 
 import influxdb_client.client.write_api
 from influxdb_client import InfluxDBClient, Point
@@ -8,7 +9,7 @@ from influxdb_client import InfluxDBClient, Point
 
 class InfluxClient(abc.ABC):
     @abc.abstractmethod
-    def has_cleaned(self, start: datetime, end: datetime) -> bool:
+    def has_cleaned(self, start: time, end: time) -> bool:
         pass
 
     @abc.abstractmethod
@@ -27,9 +28,9 @@ class InfluxAPIClient(InfluxClient):
         self.__query_api = self.__client.query_api()
         self.__write_api = self.__client.write_api(write_options=influxdb_client.client.write_api.SYNCHRONOUS)
 
-    def has_cleaned(self, start: datetime, end: datetime):
-        start_ts = int(start.timestamp())
-        stop_ts = int(end.timestamp())
+    def has_cleaned(self, start: time, end: time):
+        start_ts = int(datetime.datetime.combine(datetime.date.today(), start).timestamp())
+        stop_ts = int(datetime.datetime.combine(datetime.date.today(), end).timestamp())
 
         result = self.__query_api.query(f"""from(bucket:"{self.__bucket}")
         |> range(start: {start_ts}, stop: {stop_ts})

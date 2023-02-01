@@ -13,6 +13,7 @@ class SomeoneHomeInTheLastDay(Condition):
     """If there is no activity in the last 24 hours, do not clean"""
 
     def __init__(self, scanner: NetworkScanner):
+        super().__init__(False)
         self.scanner = scanner
 
     def is_satisfied(self) -> bool:
@@ -24,7 +25,4 @@ class SomeoneHomeInTheLastDay(Condition):
             status_response = self.scanner.get_status(ip)
             if status_response.status == 'down' and (current_time - status_response.last_seen) < one_day:
                 return True
-        return False
-
-    def should_recheck(self) -> bool:
         return False

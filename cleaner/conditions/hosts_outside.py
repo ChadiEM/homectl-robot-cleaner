@@ -8,6 +8,7 @@ HOME_IPS = os.getenv('HOME_IPS', '')
 
 class AreHostsOutside(Condition):
     def __init__(self, scanner: NetworkScanner):
+        super().__init__(True)
         self.scanner = scanner
 
     def is_satisfied(self) -> bool:
@@ -16,7 +17,4 @@ class AreHostsOutside(Condition):
             status_response = self.scanner.get_status(ip)
             if status_response.status == 'up':
                 return False
-        return True
-
-    def should_recheck(self) -> bool:
         return True

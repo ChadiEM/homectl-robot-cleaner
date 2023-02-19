@@ -4,8 +4,6 @@ from dataclasses import dataclass
 
 import requests
 
-NETWORK_SCANNER_ENDPOINT = os.getenv('NETWORK_SCANNER_ENDPOINT')
-
 
 @dataclass
 class StatusResponse:
@@ -20,6 +18,9 @@ class NetworkScanner(abc.ABC):
 
 
 class RequestsNetworkScanner(NetworkScanner):
+    def __init__(self):
+        self.scanner_endpoint = os.getenv('NETWORK_SCANNER_ENDPOINT')
+
     def get_status(self, ip: str) -> StatusResponse:
-        response = requests.get(f'{NETWORK_SCANNER_ENDPOINT}/network/ip/{ip}', timeout=60).json()
+        response = requests.get(f'{self.scanner_endpoint}/network/ip/{ip}', timeout=60).json()
         return StatusResponse(response['status'], response['last_seen'])

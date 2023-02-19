@@ -3,8 +3,10 @@ import datetime
 import os
 from datetime import time
 
-import influxdb_client.client.write_api
-from influxdb_client import InfluxDBClient, Point
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client import write_api
+
+from cleaner import clock
 
 
 class InfluxClient(abc.ABC):
@@ -26,7 +28,7 @@ class InfluxAPIClient(InfluxClient):
         self.__bucket = os.environ.get('INFLUX_BUCKET')
 
         self.__query_api = self.__client.query_api()
-        self.__write_api = self.__client.write_api(write_options=influxdb_client.client.write_api.SYNCHRONOUS)
+        self.__write_api = self.__client.write_api(write_options=write_api.SYNCHRONOUS)
 
     def has_cleaned(self, start: time, end: time):
         start_ts = int(datetime.datetime.combine(datetime.date.today(), start).timestamp())
@@ -39,7 +41,9 @@ class InfluxAPIClient(InfluxClient):
         return len(result) > 0
 
     def mark_cleaned(self):
-        self.__write_api.write(bucket=self.__bucket, record=(Point('home_control').field('robot-clean', True)))
+        self.__write_api.write(bucket=self.__bucket, record=(Point('home_control').field('robot-clean', True).time(
+            int(datetime.datetime.combine(datetime.date.today(), clock.time()).timestamp()),
+            write_precision=WritePrecision.S)))
 
     def __enter__(self):
         return self

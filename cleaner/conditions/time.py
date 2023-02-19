@@ -1,5 +1,4 @@
-import datetime
-
+from cleaner import clock
 from cleaner.condition import Condition
 from cleaner.conditions.time_bounds import START, END
 
@@ -9,8 +8,4 @@ class Time(Condition):
         super().__init__(False)
 
     def is_satisfied(self) -> bool:
-        return START <= self.now() <= END
-
-    @staticmethod
-    def now() -> datetime.time:
-        return datetime.datetime.now().time()
+        return START <= clock.time() <= END

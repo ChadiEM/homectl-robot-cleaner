@@ -9,8 +9,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname
 
 logger = logging.getLogger(__name__)
 
-if __name__ == '__main__':
+
+def main():
     logger.info('Started.')
 
     with InfluxAPIClient() as influx_client:
         robot_cleaner.start(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())
+
+
+if __name__ == '__main__':
+    main()

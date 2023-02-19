@@ -14,6 +14,8 @@ from werkzeug.serving import make_server
 import cleaner.main
 from cleaner.conditions.time_bounds import START, END
 
+INFLUX_CONTAINER_IMAGE_VERSION = "influxdb:2.3.0"
+
 
 class ServerThread(threading.Thread):
     def __init__(self, app, port):

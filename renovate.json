@@ -10,5 +10,14 @@
     "fileMatch": [
       "^requirements(\\-dev)?.txt$"
     ]
-  }
+  },
+  "regexManagers": [
+    {
+      "fileMatch": ["\\.py$"],
+      "matchStrings": [
+        "^\\S+_CONTAINER_IMAGE_VERSION = \"(?<depName>.+?):(?<currentValue>.+?)\"\\s"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
 }

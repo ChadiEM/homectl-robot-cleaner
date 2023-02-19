@@ -9,7 +9,6 @@ import requests
 
 from cleaner.condition import Condition
 
-ROWENTA_HOSTNAME = os.getenv('ROWENTA_HOSTNAME')
 logger = logging.getLogger(__name__)
 
 
@@ -36,8 +35,11 @@ class RowentaClient(abc.ABC):
 
 
 class RequestsRowentaClient(RowentaClient):
+    def __init__(self):
+        self.rowenta_endpoint = os.getenv('ROWENTA_ENDPOINT')
+
     def _find_task(self, command_id):
-        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/get/task_history', timeout=60)
+        response = requests.get(f'{self.rowenta_endpoint}/get/task_history', timeout=60)
         if response.ok:
             history_arr = response.json()['task_history']
             for task in reversed(history_arr):
@@ -46,11 +48,11 @@ class RequestsRowentaClient(RowentaClient):
         return None
 
     def clean_house(self) -> int:
-        response = requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/clean_map?map_id=3', timeout=60)
+        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=3', timeout=60)
         return response.json()['cmd_id']
 
     def go_home(self) -> None:
-        requests.get(f'http://{ROWENTA_HOSTNAME}:8080/set/go_home', timeout=60)
+        requests.get(f'{self.rowenta_endpoint}/set/go_home', timeout=60)
 
     def is_task_finished(self, cmd_id: int) -> bool:
         task = self._find_task(cmd_id)

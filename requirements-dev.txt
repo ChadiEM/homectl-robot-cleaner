@@ -1,6 +1,6 @@
 flake8==6.0.0
 flask==2.2.3
-mypy==0.991
+mypy==1.0.1
 pytest==7.2.1
 testcontainers==3.7.1
 testcontainers-core==0.0.1rc1

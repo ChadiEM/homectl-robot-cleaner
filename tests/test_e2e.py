@@ -13,8 +13,7 @@ from werkzeug.serving import make_server
 
 import cleaner.main
 from cleaner.conditions.time_bounds import START, END
-
-INFLUX_CONTAINER_IMAGE_VERSION = "influxdb:2.3.0"
+from influx_version import INFLUX_CONTAINER_IMAGE_VERSION
 
 
 class ServerThread(threading.Thread):
@@ -211,7 +210,7 @@ def assert_cleaned():
 
 @patch('cleaner.clock.time', Mock(return_value=datetime.time(11, 15, 26)))
 def test_e2e(my_variable, network_scanner, rowenta):
-    with DockerContainer("influxdb:2.3.0") \
+    with DockerContainer(INFLUX_CONTAINER_IMAGE_VERSION) \
             .with_env("DOCKER_INFLUXDB_INIT_MODE", "setup") \
             .with_env("DOCKER_INFLUXDB_INIT_USERNAME", "admin") \
             .with_env("DOCKER_INFLUXDB_INIT_PASSWORD", "password") \

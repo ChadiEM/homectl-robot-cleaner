@@ -3,7 +3,7 @@ import logging
 import os
 import time
 from datetime import date
-from enum import Enum
+from enum import Enum, auto, Flag
 
 import requests
 
@@ -20,6 +20,14 @@ def _is_today(task):
         and today.day == start_time['day']
 
 
+class TaskStatus(Flag):
+    NOT_STARTED = auto()
+    RUNNING = auto()
+    FINISHED_SUCCESS = auto()
+    FINISHED_FAILURE = auto()
+    FINISHED = FINISHED_SUCCESS | FINISHED_FAILURE
+
+
 class RowentaClient(abc.ABC):
     @abc.abstractmethod
     def clean_house(self) -> int:
@@ -30,7 +38,7 @@ class RowentaClient(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def is_task_finished(self, cmd_id: int) -> bool:
+    def task_status(self, cmd_id: int) -> TaskStatus:
         pass
 
 
@@ -54,17 +62,20 @@ class RequestsRowentaClient(RowentaClient):
     def go_home(self) -> None:
         requests.get(f'{self.rowenta_endpoint}/set/go_home', timeout=60)
 
-    def is_task_finished(self, cmd_id: int) -> bool:
+    def task_status(self, cmd_id: int) -> TaskStatus:
         task = self._find_task(cmd_id)
         if task is None:
-            return False
+            return TaskStatus.NOT_STARTED
 
         state = task['state']
 
-        if state == 'done' or 'interrupted' in state:
-            return True
+        if state == 'done':
+            return TaskStatus.FINISHED_SUCCESS
 
-        return False
+        if 'interrupted' in state:
+            return TaskStatus.FINISHED_FAILURE
+
+        return TaskStatus.RUNNING
 
 
 class CleaningResult(Enum):
@@ -95,11 +106,16 @@ class RowentaCleaner:
                     self.rowenta_client.go_home()
                     return CleaningResult.FAILURE
 
-            if self.rowenta_client.is_task_finished(cmd_id):
+            status = self.rowenta_client.task_status(cmd_id)
+
+            if status in TaskStatus.FINISHED:
                 break
 
             time.sleep(10)
 
         logger.info('Cleaning finished. See you tomorrow!')
 
-        return CleaningResult.SUCCESS
+        if status == TaskStatus.FINISHED_SUCCESS:
+            return CleaningResult.SUCCESS
+
+        return CleaningResult.FAILURE

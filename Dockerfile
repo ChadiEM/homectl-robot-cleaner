@@ -11,4 +11,4 @@ RUN python -m pip install --no-cache-dir --upgrade pip && pip install --no-cache
 ADD cleaner ./cleaner
 
 USER user
-ENTRYPOINT PYTHONUNBUFFERED=1 python cleaner/main.py
+ENTRYPOINT PYTHONUNBUFFERED=1 PYTHONPATH=. python cleaner/main.py

@@ -113,9 +113,10 @@ class RowentaCleaner:
 
             time.sleep(10)
 
-        logger.info('Cleaning finished. See you tomorrow!')
-
         if status == TaskStatus.FINISHED_SUCCESS:
+            logger.info('Cleaning finished successfully. See you tomorrow!')
             return CleaningResult.SUCCESS
 
-        return CleaningResult.FAILURE
+        else:
+            logger.info('Cleaning failed or interrupted. Will reattempt later.')
+            return CleaningResult.FAILURE

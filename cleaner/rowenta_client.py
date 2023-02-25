@@ -84,6 +84,8 @@ class CleaningResult(Enum):
 
 
 class RowentaCleaner:
+    RECHECK_SECONDS = 10
+
     def __init__(self, rowenta_client: RowentaClient):
         self.rowenta_client = rowenta_client
 
@@ -93,7 +95,7 @@ class RowentaCleaner:
                 logger.info(f'Condition {type(condition).__name__} not satisfied. Skipping.')
                 return CleaningResult.FAILURE
 
-        running_conditions = filter(lambda c: c.should_recheck(), conditions)
+        running_conditions = list(filter(lambda c: c.should_recheck(), conditions))
 
         cmd_id = self.rowenta_client.clean_house()
 
@@ -111,7 +113,7 @@ class RowentaCleaner:
             if status in TaskStatus.FINISHED:
                 break
 
-            time.sleep(10)
+            time.sleep(RowentaCleaner.RECHECK_SECONDS)
 
         if status == TaskStatus.FINISHED_SUCCESS:
             logger.info('Cleaning finished successfully. See you tomorrow!')

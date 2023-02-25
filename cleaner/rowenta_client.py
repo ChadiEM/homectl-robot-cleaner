@@ -79,8 +79,8 @@ class RequestsRowentaClient(RowentaClient):
 
 
 class CleaningResult(Enum):
-    SUCCESS = 1
-    FAILURE = 2
+    SUCCESS = auto()
+    FAILURE = auto()
 
 
 class RowentaCleaner:

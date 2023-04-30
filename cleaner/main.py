@@ -1,4 +1,5 @@
 import logging
+import signal
 
 from cleaner import robot_cleaner
 from cleaner.influx_client import InfluxAPIClient
@@ -16,6 +17,12 @@ def main():
     with InfluxAPIClient() as influx_client:
         robot_cleaner.start(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())
 
+
+def stop(_signum, _frame):
+    robot_cleaner.interrupt()
+
+
+signal.signal(signal.SIGINT, stop)
 
 if __name__ == '__main__':
     main()

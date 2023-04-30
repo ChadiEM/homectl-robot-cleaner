@@ -1,5 +1,4 @@
 from cleaner.condition import Condition
-from cleaner.conditions.time_bounds import START, END
 from cleaner.influx_client import InfluxClient
 
 
@@ -9,4 +8,4 @@ class NotCleanedToday(Condition):
         self.__influx_client = influx_client
 
     def is_satisfied(self) -> bool:
-        return not self.__influx_client.has_cleaned(START, END)
+        return not self.__influx_client.has_cleaned_today()

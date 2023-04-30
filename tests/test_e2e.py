@@ -12,7 +12,6 @@ from testcontainers.core.waiting_utils import wait_for_logs
 from werkzeug.serving import make_server
 
 import cleaner.main
-from cleaner.conditions.time_bounds import START, END
 from influx_version import INFLUX_CONTAINER_IMAGE_VERSION
 
 
@@ -192,8 +191,10 @@ def my_variable(monkeypatch):
 
 
 def assert_cleaned():
-    start_ts = int(datetime.datetime.combine(datetime.date.today(), START).timestamp())
-    stop_ts = int(datetime.datetime.combine(datetime.date.today(), END).timestamp())
+    start_time_check = datetime.datetime.now()
+
+    start_ts = int(datetime.datetime.combine(datetime.date.today(), datetime.time(11)).timestamp())
+    stop_ts = int(datetime.datetime.combine(datetime.date.today(), datetime.time(12)).timestamp())
 
     with InfluxDBClient(url=os.environ.get('INFLUX_ENDPOINT'),
                         token=os.environ.get('INFLUX_TOKEN'),
@@ -201,9 +202,15 @@ def assert_cleaned():
         bucket = os.environ.get('INFLUX_BUCKET')
         query_api = influx_client.query_api()
 
-        result = query_api.query(f"""from(bucket:"{bucket}")
-                |> range(start: {start_ts}, stop: {stop_ts})
-                |> filter(fn:(r) => r._measurement == "home_control" and r._field == "robot-clean")""")
+        while datetime.datetime.now() - start_time_check < datetime.timedelta(seconds=60):
+            result = query_api.query(f"""from(bucket:"{bucket}")
+                    |> range(start: {start_ts}, stop: {stop_ts})
+                    |> filter(fn:(r) => r._measurement == "home_control" and r._field == "robot-clean")""")
+
+            if len(result) == 0:
+                time.sleep(1)
+            else:
+                break
 
         assert len(result) > 0
 
@@ -222,8 +229,11 @@ def test_e2e(my_variable, network_scanner, rowenta):
         wait_for_logs(container, "transport=http addr=:8086 port=8086")
 
         print(container.get_logs())
-        print('ready')
 
-        cleaner.main.main()
+        t = threading.Thread(target=cleaner.main.main)
+        t.start()
 
-        assert_cleaned()
+        try:
+            assert_cleaned()
+        finally:
+            cleaner.main.stop()

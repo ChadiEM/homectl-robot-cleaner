@@ -1,7 +1,7 @@
 import abc
 import logging
 import os
-import time
+import threading
 from datetime import date
 from enum import Enum, auto, Flag
 
@@ -89,7 +89,7 @@ class RowentaCleaner:
     def __init__(self, rowenta_client: RowentaClient):
         self.rowenta_client = rowenta_client
 
-    def clean(self, conditions: list[Condition]) -> CleaningResult:
+    def clean(self, conditions: list[Condition], interrupted: threading.Event) -> CleaningResult:
         for condition in conditions:
             if not condition.is_satisfied():
                 logger.info(f'Condition {type(condition).__name__} not satisfied. Skipping.')
@@ -113,7 +113,9 @@ class RowentaCleaner:
             if status in TaskStatus.FINISHED:
                 break
 
-            time.sleep(RowentaCleaner.RECHECK_SECONDS)
+            interrupted_status = interrupted.wait(RowentaCleaner.RECHECK_SECONDS)
+            if interrupted_status:
+                break
 
         if status == TaskStatus.FINISHED_SUCCESS:
             logger.info('Cleaning finished successfully. See you tomorrow!')

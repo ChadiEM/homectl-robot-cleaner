@@ -1,3 +1,4 @@
+import threading
 from unittest.mock import Mock, patch
 
 from cleaner.condition import Condition
@@ -26,7 +27,8 @@ def test_running_conditions_should_be_reevaluated():
 
     cleaner = RowentaCleaner(rowenta_client)
     conditions = [condition]
+    interrupted_event = threading.Event()
 
-    result = cleaner.clean(conditions)
+    result = cleaner.clean(conditions, interrupted_event)
 
     assert result == CleaningResult.FAILURE

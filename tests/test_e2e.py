@@ -236,4 +236,4 @@ def test_e2e(my_variable, network_scanner, rowenta):
         try:
             assert_cleaned()
         finally:
-            cleaner.main.stop()
+            cleaner.main.interrupt()

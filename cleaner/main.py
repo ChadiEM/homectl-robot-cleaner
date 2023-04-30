@@ -18,11 +18,15 @@ def main():
         robot_cleaner.start(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())
 
 
-def stop(_signum, _frame):
+def interrupt():
     robot_cleaner.interrupt()
 
 
-signal.signal(signal.SIGINT, stop)
+def __stop(_signum, _frame):
+    interrupt()
+
+
+signal.signal(signal.SIGINT, __stop)
 
 if __name__ == '__main__':
     main()

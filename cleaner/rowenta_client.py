@@ -1,4 +1,5 @@
 import abc
+import datetime
 import logging
 import os
 import threading
@@ -84,7 +85,7 @@ class CleaningResult(Enum):
 
 
 class RowentaCleaner:
-    RECHECK_SECONDS = 10
+    RECHECK_SECONDS = datetime.timedelta(seconds=5)
 
     def __init__(self, rowenta_client: RowentaClient):
         self.rowenta_client = rowenta_client
@@ -101,7 +102,9 @@ class RowentaCleaner:
 
         logger.info('Started cleaning...')
 
-        while True:
+        status = TaskStatus.NOT_STARTED
+
+        while not interrupted.is_set():
             for condition in running_conditions:
                 if not condition.is_satisfied():
                     logger.info(f'Condition {type(condition).__name__} not satisfied. Cleaning interrupted.')
@@ -113,9 +116,7 @@ class RowentaCleaner:
             if status in TaskStatus.FINISHED:
                 break
 
-            interrupted_status = interrupted.wait(RowentaCleaner.RECHECK_SECONDS)
-            if interrupted_status:
-                break
+            interrupted.wait(RowentaCleaner.RECHECK_SECONDS.total_seconds())
 
         if status == TaskStatus.FINISHED_SUCCESS:
             logger.info('Cleaning finished successfully. See you tomorrow!')

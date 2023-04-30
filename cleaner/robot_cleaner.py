@@ -15,7 +15,7 @@ from cleaner.scanner import NetworkScanner
 logger = logging.getLogger(__name__)
 interrupted_event = threading.Event()
 
-CLEAN_CHECK_INTERVAL = datetime.timedelta(minutes=5)
+CLEAN_CHECK_INTERVAL = datetime.timedelta(minutes=1)
 
 
 def sleep_until_tomorrow():
@@ -49,8 +49,8 @@ def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_
         if influx_client.has_cleaned_today():
             sleep_until_tomorrow()
         else:
-            logger.info(f'Next check in {CLEAN_CHECK_INTERVAL.min} minutes.')
-            interrupted_event.wait(CLEAN_CHECK_INTERVAL.seconds)
+            logger.info(f'Next check in {CLEAN_CHECK_INTERVAL.total_seconds()} seconds.')
+            interrupted_event.wait(CLEAN_CHECK_INTERVAL.total_seconds())
 
 
 def interrupt():

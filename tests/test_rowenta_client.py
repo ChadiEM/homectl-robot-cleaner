@@ -1,3 +1,4 @@
+import datetime
 import threading
 from unittest.mock import Mock, patch
 
@@ -15,7 +16,7 @@ def test_should_have_finished_in_finished_failure():
     assert status in TaskStatus.FINISHED
 
 
-@patch('cleaner.rowenta_client.RowentaCleaner.RECHECK_SECONDS', 0)
+@patch('cleaner.rowenta_client.RowentaCleaner.RECHECK_SECONDS', datetime.timedelta())
 def test_running_conditions_should_be_reevaluated():
     rowenta_client = Mock(spec=RowentaClient)
     rowenta_client.clean_house.return_value = 1

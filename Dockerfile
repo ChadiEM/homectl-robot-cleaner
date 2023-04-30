@@ -6,7 +6,10 @@ RUN addgroup usergroup && adduser -D user -G usergroup && mkdir /work
 WORKDIR /work
 
 ADD requirements.txt .
-RUN python -m pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip uninstall --no-cache-dir --yes pip
 
 ADD cleaner ./cleaner
 

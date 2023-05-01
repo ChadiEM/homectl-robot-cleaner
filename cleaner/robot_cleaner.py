@@ -19,13 +19,14 @@ CLEAN_CHECK_INTERVAL = datetime.timedelta(minutes=1)
 
 
 def sleep_until_tomorrow():
-    today = datetime.datetime.today()
-    future = datetime.datetime(today.year, today.month, today.day, START.hour, START.minute)
-    if today.timestamp() > future.timestamp():
-        future += datetime.timedelta(days=1)
+    now = datetime.datetime.now()
+    next_run = datetime.datetime.combine(now, START)
 
-    logger.info(f'Sleeping until {str(future)}')
-    interrupted_event.wait((future - today).total_seconds())
+    if now > next_run:
+        next_run = next_run + datetime.timedelta(days=1)
+
+    print(f'Sleeping until {str(next_run)}')
+    interrupted_event.wait((next_run - now).total_seconds())
 
 
 def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_client: RowentaClient):
@@ -40,13 +41,14 @@ def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_
 
     rowenta_cleaner = RowentaCleaner(rowenta_client)
 
+    if influx_client.has_cleaned_today():
+        sleep_until_tomorrow()
+
     while not interrupted_event.is_set():
         cleaning_result = rowenta_cleaner.clean(conditions, interrupted_event)
 
         if cleaning_result == CleaningResult.SUCCESS:
             influx_client.mark_cleaned_today()
-
-        if influx_client.has_cleaned_today():
             sleep_until_tomorrow()
         else:
             logger.info(f'Next check in {CLEAN_CHECK_INTERVAL.total_seconds()} seconds.')

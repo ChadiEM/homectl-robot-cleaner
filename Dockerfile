@@ -1,17 +1,24 @@
+FROM python:3.11-buster as builder
+
+ # renovate: datasource=pypi depName=poetry
+ENV POETRY_VERSION=1.4.2
+
+RUN pip install --upgrade pip && pip install poetry==$POETRY_VERSION
+
+ENV POETRY_VIRTUALENVS_IN_PROJECT=1
+WORKDIR /app
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --without dev --no-root --no-cache
+
 FROM python:3.11-alpine
 
 RUN apk --no-cache upgrade && apk --no-cache add tzdata
 
-RUN addgroup usergroup && adduser -D user -G usergroup && mkdir /work
-WORKDIR /work
+ENV VIRTUAL_ENV=/app/.venv
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-ADD requirements.txt .
+COPY cleaner ./cleaner
 
-RUN python -m pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && pip uninstall --no-cache-dir --yes pip
-
-ADD cleaner ./cleaner
-
-USER user
-ENTRYPOINT PYTHONUNBUFFERED=1 PYTHONPATH=. python cleaner/main.py
+USER nobody
+ENTRYPOINT ["python", "-m", "cleaner.main"]

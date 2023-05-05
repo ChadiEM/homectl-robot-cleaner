@@ -2,15 +2,14 @@
 
 Tells the robot vacuum cleaner to clean the house when nobody is there.
 
-## Init virtual env
+## Install dependencies
+
 ```
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt -r requirements-dev.txt
+poetry install
 ```
 
-## Release
+## Tag version for deployment
+
 ```
-source venv/bin/activate
-fullrelease
+poetry run tag <version>
 ```

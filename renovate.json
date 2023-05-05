@@ -1,16 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    ":automergeMinor"
   ],
   "labels": [
     "dependencies"
   ],
-  "pip_requirements": {
-    "fileMatch": [
-      "^requirements(\\-dev)?.txt$"
-    ]
-  },
   "regexManagers": [
     {
       "fileMatch": [
@@ -20,16 +16,6 @@
         "^\\S+_CONTAINER_IMAGE_VERSION = \"(?<depName>.+?):(?<currentValue>.+?)\""
       ],
       "datasourceTemplate": "docker"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "matchCurrentVersion": "!/^0/",
-      "automerge": true
     }
   ]
 }

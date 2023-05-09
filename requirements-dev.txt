@@ -6,4 +6,4 @@ testcontainers==3.7.1
 testcontainers-core==0.0.1rc1
 types-requests==2.30.0.0
 Werkzeug==2.3.4
-zest.releaser==7.3.0
+zest.releaser==8.0.0

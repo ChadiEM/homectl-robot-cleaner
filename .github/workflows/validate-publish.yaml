@@ -4,6 +4,7 @@ on:
   push:
 
 env:
+  # renovate: datasource=pypi depName=poetry
   POETRY_VERSION: 1.4.2
 
 jobs:

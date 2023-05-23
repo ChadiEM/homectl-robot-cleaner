@@ -20,7 +20,7 @@ pytest = "7.3.1"
 testcontainers = "3.7.1"
 testcontainers-core = "0.0.1rc1"
 types-requests = "2.30.0.0"
-Werkzeug = "2.3.2"
+Werkzeug = "2.3.4"
 
 [tool.poetry.scripts]
 tag = "release:tag"

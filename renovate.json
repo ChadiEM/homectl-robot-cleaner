@@ -4,11 +4,18 @@
     "config:base",
     "regexManagers:dockerfileVersions",
     "regexManagers:githubActionsVersions",
-    ":automergeMinor"
+    ":automergeLinters",
+    ":automergeTesters",
+    "schedule:automergeDaily"
   ],
   "labels": [
     "dependencies"
   ],
+  "updateNotScheduled": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
   "regexManagers": [
     {
       "fileMatch": [

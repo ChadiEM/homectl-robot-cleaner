@@ -6,7 +6,7 @@
     "regexManagers:githubActionsVersions",
     ":automergeLinters",
     ":automergeTesters",
-    "schedule:automergeDaily"
+    "schedule:daily"
   ],
   "labels": [
     "dependencies"

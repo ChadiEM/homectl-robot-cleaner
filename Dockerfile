@@ -1,7 +1,7 @@
 FROM python:3.11-buster as builder
 
 # renovate: datasource=pypi depName=poetry
-ENV POETRY_VERSION=1.5.1
+ENV POETRY_VERSION=1.6.0
 
 RUN pip install --upgrade pip && pip install poetry==$POETRY_VERSION
 

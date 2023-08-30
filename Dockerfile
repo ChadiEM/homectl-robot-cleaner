@@ -15,7 +15,9 @@ FROM python:3.11-alpine
 
 RUN apk --no-cache upgrade && apk --no-cache add tzdata
 
-ENV VIRTUAL_ENV=/app/.venv
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
 COPY cleaner ./cleaner

@@ -8,8 +8,8 @@ Tells the robot vacuum cleaner to clean the house when nobody is there.
 poetry install
 ```
 
-## Tag version for deployment
+## Cut a release
 
 ```
-poetry run tag <version>
+poetry run release <version>
 ```

@@ -2,6 +2,12 @@ import os
 import sys
 
 
-def tag():
-    os.system(f'git tag {sys.argv[1]}')
-    os.system(f'poetry version {sys.argv[1]}')
+def release():
+    target_version = sys.argv[1]
+
+    os.system(f'poetry version {target_version}')
+    os.system('git add pyproject.toml')
+    os.system(f'git commit -m "Bump {target_version}"')
+    os.system(f'git tag {target_version}')
+    os.system('git push origin master')
+    os.system(f'git push origin {target_version}')

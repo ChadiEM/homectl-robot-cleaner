@@ -23,7 +23,7 @@ types-requests = "2.31.0.1"
 Werkzeug = "2.3.6"
 
 [tool.poetry.scripts]
-tag = "release:tag"
+release = "release:release"
 
 [build-system]
 requires = ["poetry-core"]

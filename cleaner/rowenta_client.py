@@ -57,7 +57,7 @@ class RequestsRowentaClient(RowentaClient):
         return None
 
     def clean_house(self) -> int:
-        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=3', timeout=60)
+        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=11', timeout=60)
         return response.json()['cmd_id']
 
     def go_home(self) -> None:

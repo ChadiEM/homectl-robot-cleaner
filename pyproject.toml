@@ -19,7 +19,7 @@ mypy = "1.5.1"
 pytest = "7.4.2"
 testcontainers = "3.7.1"
 testcontainers-core = "0.0.1rc1"
-types-requests = "2.31.0.3"
+types-requests = "2.31.0.7"
 Werkzeug = "3.0.0"
 
 [tool.poetry.scripts]

@@ -11,7 +11,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --without dev --no-root --no-cache
 
-FROM python:3.11-alpine
+FROM python:3.12-alpine
 
 RUN apk --no-cache upgrade && apk --no-cache add tzdata
 

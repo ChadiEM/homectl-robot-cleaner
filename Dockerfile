@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.18 as builder
+FROM python:3.12-bookworm as builder
 
 # renovate: datasource=pypi depName=poetry
 ENV POETRY_VERSION=1.6.1

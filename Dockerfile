@@ -1,4 +1,4 @@
-FROM python:3.11-buster as builder
+FROM python:3.12-alpine3.18 as builder
 
 # renovate: datasource=pypi depName=poetry
 ENV POETRY_VERSION=1.6.1
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --without dev --no-root --no-cache
 
-FROM python:3.12-alpine
+FROM python:3.12-alpine3.18
 
 RUN apk --no-cache upgrade && apk --no-cache add tzdata
 

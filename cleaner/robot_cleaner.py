@@ -50,9 +50,13 @@ def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_
         if cleaning_result == CleaningResult.SUCCESS:
             influx_client.mark_cleaned_today()
             sleep_until_tomorrow()
-        else:
+        elif cleaning_result == CleaningResult.FAILURE_DO_NOT_RETRY:
+            sleep_until_tomorrow()
+        elif cleaning_result == CleaningResult.FAILURE:
             logger.info(f'Next check in {CLEAN_CHECK_INTERVAL.total_seconds()} seconds.')
             interrupted_event.wait(CLEAN_CHECK_INTERVAL.total_seconds())
+        else:
+            raise Exception('Invalid cleaning result.')
 
 
 def interrupt():

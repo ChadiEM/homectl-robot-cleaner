@@ -24,9 +24,15 @@ def _is_today(task):
 class TaskStatus(Flag):
     NOT_STARTED = auto()
     RUNNING = auto()
+    INTERRUPTED_BY_USER = auto()
+    INTERRUPTED_STUCK_WHEELS = auto()
+    INTERRUPTED_OTHER = auto()
+    FAILED = auto()
     FINISHED_SUCCESS = auto()
-    FINISHED_FAILURE = auto()
-    FINISHED = FINISHED_SUCCESS | FINISHED_FAILURE
+
+    FINISHED = INTERRUPTED_BY_USER | INTERRUPTED_STUCK_WHEELS | INTERRUPTED_OTHER | FAILED | FINISHED_SUCCESS
+    FAILURE = INTERRUPTED_STUCK_WHEELS | INTERRUPTED_OTHER | FAILED
+    RETRIABLE_FAILURE = INTERRUPTED_BY_USER
 
 
 class RowentaClient(abc.ABC):
@@ -73,8 +79,17 @@ class RequestsRowentaClient(RowentaClient):
         if state == 'done':
             return TaskStatus.FINISHED_SUCCESS
 
+        if state == 'interrupted_stuck_wheels':
+            return TaskStatus.INTERRUPTED_STUCK_WHEELS
+
+        if state == 'interrupted_by_user':
+            return TaskStatus.INTERRUPTED_BY_USER
+
         if 'interrupted' in state:
-            return TaskStatus.FINISHED_FAILURE
+            return TaskStatus.INTERRUPTED_OTHER
+
+        if state == 'failed':
+            return TaskStatus.FAILED
 
         return TaskStatus.RUNNING
 
@@ -82,6 +97,7 @@ class RequestsRowentaClient(RowentaClient):
 class CleaningResult(Enum):
     SUCCESS = auto()
     FAILURE = auto()
+    FAILURE_DO_NOT_RETRY = auto()
 
 
 class RowentaCleaner:
@@ -121,7 +137,11 @@ class RowentaCleaner:
         if status == TaskStatus.FINISHED_SUCCESS:
             logger.info('Cleaning finished successfully. See you tomorrow!')
             return CleaningResult.SUCCESS
-
-        else:
-            logger.info('Cleaning failed or interrupted. Will reattempt later.')
+        elif status in TaskStatus.FAILURE:
+            logger.info('Cleaning failed. Will wait until tomorrow.')
+            return CleaningResult.FAILURE_DO_NOT_RETRY
+        elif status in TaskStatus.RETRIABLE_FAILURE:
+            logger.info('Cleaning interrupted. Will reattempt later.')
             return CleaningResult.FAILURE
+        else:
+            raise Exception(f'Unexpected status: {status}')

@@ -12,7 +12,12 @@ def test_should_have_finished_in_finished_success():
 
 
 def test_should_have_finished_in_finished_failure():
-    status = TaskStatus.FINISHED_FAILURE
+    status = TaskStatus.INTERRUPTED_BY_USER
+    assert status in TaskStatus.FINISHED
+
+
+def test_should_have_finished_in_finished_stuck_wheels():
+    status = TaskStatus.INTERRUPTED_STUCK_WHEELS
     assert status in TaskStatus.FINISHED
 
 

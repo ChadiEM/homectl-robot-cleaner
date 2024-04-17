@@ -15,7 +15,7 @@ influxdb-client = "1.41.0"
 [tool.poetry.dev-dependencies]
 flake8 = "7.0.0"
 flask = "3.0.2"
-mypy = "1.8.0"
+mypy = "1.9.0"
 pytest = "8.1.1"
 testcontainers = "4.2.0"
 testcontainers-core = "0.0.1rc1"

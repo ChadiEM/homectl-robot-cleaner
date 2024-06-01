@@ -613,41 +613,47 @@ files = [
 
 [[package]]
 name = "testcontainers"
-version = "4.2.0"
+version = "4.5.1"
 description = "Python library for throwaway instances of anything that can run in a Docker container"
 category = "dev"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "testcontainers-4.2.0-py3-none-any.whl", hash = "sha256:64d24b1a3c9ce6ca67434e91771a9070b174f6912c3be729d506361d098f51f4"},
-    {file = "testcontainers-4.2.0.tar.gz", hash = "sha256:ee06222f17594dc41ee15b6f19c5758bc47e1c546082e80edde21a6c8ae59126"},
+    {file = "testcontainers-4.5.1-py3-none-any.whl", hash = "sha256:0cbcb92932f00f9a60ee7bb815cab9e5a716a8258a8c7185751df6afef098dce"},
+    {file = "testcontainers-4.5.1.tar.gz", hash = "sha256:a8476d2b34953206840be5513645544d5a5942672010906c67dc0987dcffc208"},
 ]
 
 [package.dependencies]
 docker = "*"
+typing-extensions = "*"
 urllib3 = "*"
 wrapt = "*"
 
 [package.extras]
 arangodb = ["python-arango (>=7.8,<8.0)"]
 azurite = ["azure-storage-blob (>=12.19,<13.0)"]
+chroma = ["chromadb-client"]
 clickhouse = ["clickhouse-driver"]
-google = ["google-cloud-pubsub (>=2)"]
+google = ["google-cloud-datastore (>=2)", "google-cloud-pubsub (>=2)"]
 influxdb = ["influxdb", "influxdb-client"]
 k3s = ["kubernetes", "pyyaml"]
-kafka = ["kafka-python"]
 keycloak = ["python-keycloak"]
 localstack = ["boto3"]
 minio = ["minio"]
 mongodb = ["pymongo"]
 mssql = ["pymssql", "sqlalchemy"]
 mysql = ["pymysql[rsa]", "sqlalchemy"]
+nats = ["nats-py"]
 neo4j = ["neo4j"]
 opensearch = ["opensearch-py"]
-oracle = ["cx_Oracle", "sqlalchemy"]
+oracle = ["oracledb", "sqlalchemy"]
+oracle-free = ["oracledb", "sqlalchemy"]
+qdrant = ["qdrant-client"]
 rabbitmq = ["pika"]
 redis = ["redis"]
+registry = ["bcrypt"]
 selenium = ["selenium"]
+weaviate = ["weaviate-client (>=4.5.4,<5.0.0)"]
 
 [[package]]
 name = "testcontainers-core"
@@ -810,4 +816,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "d6e382f361481be1f4b6340558bdbcbe38588b7143dd1ddeca0ecf989a9fd27f"
+content-hash = "8e58e1cabfed107eabfd8cfc20067ed20dc485e2b5f0620992edc931751c75e3"

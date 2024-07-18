@@ -9,7 +9,7 @@ packages = [{ include = "cleaner" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-requests = "2.31.0"
+requests = "2.32.3"
 influxdb-client = "1.41.0"
 
 [tool.poetry.dev-dependencies]

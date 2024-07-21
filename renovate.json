@@ -23,6 +23,12 @@
         "github-actions"
       ],
       "automerge": true
+    },
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "automerge": true
     }
   ],
   "customManagers": [

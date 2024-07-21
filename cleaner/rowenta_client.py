@@ -48,6 +48,10 @@ class RowentaClient(abc.ABC):
     def task_status(self, cmd_id: int) -> TaskStatus:
         pass
 
+    @abc.abstractmethod
+    def is_docked(self):
+        pass
+
 
 class RequestsRowentaClient(RowentaClient):
     def __init__(self):
@@ -92,6 +96,11 @@ class RequestsRowentaClient(RowentaClient):
             return TaskStatus.FAILED
 
         return TaskStatus.RUNNING
+
+    def is_docked(self):
+        response = requests.get(f'{self.rowenta_endpoint}/get/status', timeout=60)
+        response_json = response.json()
+        return response_json['mode'] == 'ready' and response_json['charging'] != 'unconnected'
 
 
 class CleaningResult(Enum):

@@ -5,6 +5,7 @@ import threading
 from cleaner.condition import Condition
 from cleaner.conditions.hosts_outside import AreHostsOutside
 from cleaner.conditions.not_cleaned_today import NotCleanedToday
+from cleaner.conditions.robot_docked import RobotDocked
 from cleaner.conditions.someone_home_last_day import SomeoneHomeInTheLastDay
 from cleaner.conditions.time import Time
 from cleaner.conditions.time_bounds import START
@@ -36,7 +37,8 @@ def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_
         Time(),
         NotCleanedToday(influx_client),
         AreHostsOutside(network_scanner),
-        SomeoneHomeInTheLastDay(network_scanner)
+        SomeoneHomeInTheLastDay(network_scanner),
+        RobotDocked(rowenta_client)
     ]
 
     rowenta_cleaner = RowentaCleaner(rowenta_client)

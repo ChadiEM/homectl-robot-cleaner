@@ -172,6 +172,18 @@ def rowenta():
                 "task_requires_special_area_confirmation": 0
             }
 
+    @app.route('/get/status')
+    def get_status():
+        return {
+            "voltage": 15920,
+            "mode": "ready",
+            "cleaning_parameter_set": 3,
+            "battery_level": 89,
+            "charging": "connected",
+            "time": {"year": 2024, "month": 7, "day": 21, "hour": 10, "min": 40, "sec": 5, "day_of_week": 7},
+            "startup_time": {"year": 2024, "month": 7, "day": 21, "hour": 5, "min": 47, "sec": 37, "day_of_week": 7}
+        }
+
     server = ServerThread(app, 33001)
     server.start()
 

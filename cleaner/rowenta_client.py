@@ -6,7 +6,7 @@ import threading
 from datetime import date
 from enum import Enum, auto, Flag
 
-import requests
+import httpx
 
 from cleaner.condition import Condition
 
@@ -58,8 +58,8 @@ class RequestsRowentaClient(RowentaClient):
         self.rowenta_endpoint = os.getenv('ROWENTA_ENDPOINT')
 
     def _find_task(self, command_id):
-        response = requests.get(f'{self.rowenta_endpoint}/get/task_history', timeout=60)
-        if response.ok:
+        response = httpx.get(f'{self.rowenta_endpoint}/get/task_history', timeout=60)
+        if response.is_success:
             history_arr = response.json()['task_history']
             for task in reversed(history_arr):
                 if task['source_id'] == command_id and _is_today(task):
@@ -67,11 +67,11 @@ class RequestsRowentaClient(RowentaClient):
         return None
 
     def clean_house(self) -> int:
-        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=11', timeout=60)
+        response = httpx.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=11', timeout=60)
         return response.json()['cmd_id']
 
     def go_home(self) -> None:
-        requests.get(f'{self.rowenta_endpoint}/set/go_home', timeout=60)
+        httpx.get(f'{self.rowenta_endpoint}/set/go_home', timeout=60)
 
     def task_status(self, cmd_id: int) -> TaskStatus:
         task = self._find_task(cmd_id)
@@ -98,7 +98,7 @@ class RequestsRowentaClient(RowentaClient):
         return TaskStatus.RUNNING
 
     def is_docked(self):
-        response = requests.get(f'{self.rowenta_endpoint}/get/status', timeout=60)
+        response = httpx.get(f'{self.rowenta_endpoint}/get/status', timeout=60)
         response_json = response.json()
         return response_json['mode'] == 'ready' and response_json['charging'] != 'unconnected'
 

@@ -18,7 +18,7 @@ flask = "3.0.3"
 mypy = "1.11.0"
 pytest = "8.3.3"
 testcontainers = "4.7.2"
-Werkzeug = "3.0.2"
+Werkzeug = "3.0.4"
 
 [tool.poetry.scripts]
 release = "release:release"

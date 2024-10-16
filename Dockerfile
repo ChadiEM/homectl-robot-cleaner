@@ -1,7 +1,7 @@
 FROM python:3.12-bookworm as builder
 
 # renovate: datasource=pypi depName=poetry
-ENV POETRY_VERSION=1.8.3
+ENV POETRY_VERSION=1.8.4
 
 RUN pip install --upgrade pip && pip install poetry==$POETRY_VERSION
 

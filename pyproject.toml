@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "homectl-robot-cleaner"
-version = "1.6.4"
+version = "1.6.5"
 description = "Tells the robot vacuum cleaner to clean the house when nobody is there"
 authors = ["Chadi El Masri"]
 license = "MIT"

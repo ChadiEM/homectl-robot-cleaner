@@ -1,0 +1,36 @@
+name: Create a release
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_version:
+        required: true
+        type: string
+        description: Target release version
+
+env:
+  # renovate: datasource=pypi depName=poetry
+  POETRY_VERSION: 1.8.5
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Install dependencies
+        run: poetry install
+      - name: Run release
+        run: poetry run release ${{ inputs.target_version }}

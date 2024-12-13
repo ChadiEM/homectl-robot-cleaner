@@ -11,7 +11,6 @@
   "labels": [
     "dependencies"
   ],
-  "updateNotScheduled": false,
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true

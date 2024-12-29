@@ -13,3 +13,22 @@ poetry install
 ```
 poetry run release <version>
 ```
+
+## Run
+
+For a successful run, please provide the following environment variables:
+
+### InfluxDB-specific environment variables
+
+```
+INFLUXDB_V2_URL
+INFLUXDB_V2_ORG
+INFLUXDB_V2_TOKEN
+```
+
+### Application-specific environment variables:
+
+```
+ROBOT_CLEANER_INFLUX_BUCKET
+```
+

@@ -2,7 +2,7 @@ import abc
 import os
 from dataclasses import dataclass
 
-import httpx
+import requests
 
 
 @dataclass
@@ -22,5 +22,5 @@ class RequestsNetworkScanner(NetworkScanner):
         self.scanner_endpoint = os.getenv('NETWORK_SCANNER_ENDPOINT')
 
     def get_status(self, ip: str) -> StatusResponse:
-        response = httpx.get(f'{self.scanner_endpoint}/network/ip/{ip}', timeout=60).json()
+        response = requests.get(f'{self.scanner_endpoint}/network/ip/{ip}', timeout=60).json()
         return StatusResponse(response['status'], response['last_seen'])

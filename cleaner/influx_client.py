@@ -20,11 +20,8 @@ class InfluxClient(abc.ABC):
 
 class InfluxAPIClient(InfluxClient):
     def __init__(self):
-        self.__client = InfluxDBClient(url=os.environ.get('INFLUX_ENDPOINT'),
-                                       token=os.environ.get('INFLUX_TOKEN'),
-                                       org=os.environ.get('INFLUX_ORG'))
-
-        self.__bucket = os.environ.get('INFLUX_BUCKET')
+        self.__client = InfluxDBClient.from_env_properties()
+        self.__bucket = os.environ.get('ROBOT_CLEANER_INFLUX_BUCKET')
 
         self.__query_api = self.__client.query_api()
         self.__write_api = self.__client.write_api(write_options=write_api.SYNCHRONOUS)

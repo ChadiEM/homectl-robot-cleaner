@@ -194,10 +194,10 @@ def rowenta():
 
 @pytest.fixture(scope="function")
 def my_variable(monkeypatch):
-    monkeypatch.setenv("INFLUX_ENDPOINT", 'http://localhost:8086')
-    monkeypatch.setenv("INFLUX_TOKEN", 'admin-token')
-    monkeypatch.setenv("INFLUX_ORG", 'influxdata')
-    monkeypatch.setenv("INFLUX_BUCKET", 'data')
+    monkeypatch.setenv("INFLUXDB_V2_URL", 'http://localhost:8086')
+    monkeypatch.setenv("INFLUXDB_V2_TOKEN", 'admin-token')
+    monkeypatch.setenv("INFLUXDB_V2_ORG", 'influxdata')
+    monkeypatch.setenv("ROBOT_CLEANER_INFLUX_BUCKET", 'data')
     monkeypatch.setenv("NETWORK_SCANNER_ENDPOINT", 'http://localhost:33000')
     monkeypatch.setenv("ROWENTA_ENDPOINT", 'http://localhost:33001')
 
@@ -208,10 +208,8 @@ def assert_cleaned():
     start_ts = int(datetime.datetime.combine(datetime.date.today(), datetime.time(11)).timestamp())
     stop_ts = int(datetime.datetime.combine(datetime.date.today(), datetime.time(12)).timestamp())
 
-    with InfluxDBClient(url=os.environ.get('INFLUX_ENDPOINT'),
-                        token=os.environ.get('INFLUX_TOKEN'),
-                        org=os.environ.get('INFLUX_ORG')) as influx_client:
-        bucket = os.environ.get('INFLUX_BUCKET')
+    with InfluxDBClient.from_env_properties() as influx_client:
+        bucket = os.environ.get('ROBOT_CLEANER_INFLUX_BUCKET')
         query_api = influx_client.query_api()
 
         while datetime.datetime.now() - start_time_check < datetime.timedelta(seconds=60):

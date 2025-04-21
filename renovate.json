@@ -4,8 +4,6 @@
     "config:recommended",
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
-    ":automergeLinters",
-    ":automergeTesters",
     "schedule:daily"
   ],
   "labels": [
@@ -15,21 +13,7 @@
     "enabled": true,
     "automerge": true
   },
-  "packageRules": [
-    {
-      "description": "Auto-merge github actions updates",
-      "matchManagers": [
-        "github-actions"
-      ],
-      "automerge": true
-    },
-    {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "automerge": true
-    }
-  ],
+  "automerge": true,
   "customManagers": [
     {
       "customType": "regex",

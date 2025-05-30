@@ -15,7 +15,7 @@ requests = "2.32.3"
 [tool.poetry.dev-dependencies]
 flake8 = "7.2.0"
 flask = "3.1.1"
-mypy = "1.15.0"
+mypy = "1.16.0"
 pytest = "8.3.5"
 testcontainers = "4.10.0"
 types-requests = "2.32.0.20250515"

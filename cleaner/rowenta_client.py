@@ -9,16 +9,17 @@ from enum import Enum, auto, Flag
 import requests
 
 from cleaner.condition import Condition
+from cleaner.rowenta_client_types import CleanResponse, TaskHistoryResponse, StatusModel, TaskHistoryItem
 
 logger = logging.getLogger(__name__)
 
 
-def _is_today(task):
-    start_time = task['start_time']
+def _is_today(task: TaskHistoryItem) -> bool:
+    start_time = task.start_time
     today = date.today()
-    return today.year == start_time['year'] \
-        and today.month == start_time['month'] \
-        and today.day == start_time['day']
+    return today.year == start_time.year \
+        and today.month == start_time.month \
+        and today.day == start_time.day
 
 
 class TaskStatus(Flag):
@@ -37,7 +38,7 @@ class TaskStatus(Flag):
 
 class RowentaClient(abc.ABC):
     @abc.abstractmethod
-    def clean_house(self) -> int:
+    def clean_house(self) -> int | None:
         pass
 
     @abc.abstractmethod
@@ -49,36 +50,40 @@ class RowentaClient(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def is_docked(self):
+    def is_docked(self) -> bool:
         pass
 
 
 class RequestsRowentaClient(RowentaClient):
-    def __init__(self):
+    def __init__(self) -> None:
         self.rowenta_endpoint = os.getenv('ROWENTA_ENDPOINT')
 
-    def _find_task(self, command_id):
-        response = requests.get(f'{self.rowenta_endpoint}/get/task_history', timeout=60)
+    def _find_task(self, command_id: int) -> TaskHistoryItem | None:
+        response = requests.get(f'{self.rowenta_endpoint}/get/task_history', timeout=5)
         if response.ok:
-            history_arr = response.json()['task_history']
+            res = TaskHistoryResponse.model_validate_json(response.content)
+            history_arr = res.task_history
             for task in reversed(history_arr):
-                if task['source_id'] == command_id and _is_today(task):
+                if task.source_id == command_id and _is_today(task):
                     return task
         return None
 
-    def clean_house(self) -> int:
-        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=11', timeout=60)
-        return response.json()['cmd_id']
+    def clean_house(self) -> int | None:
+        response = requests.get(f'{self.rowenta_endpoint}/set/clean_map?map_id=11', timeout=5)
+        if response.ok:
+            res = CleanResponse.model_validate_json(response.content)
+            return res.cmd_id
+        return None
 
     def go_home(self) -> None:
-        requests.get(f'{self.rowenta_endpoint}/set/go_home', timeout=60)
+        requests.get(f'{self.rowenta_endpoint}/set/go_home', timeout=5)
 
     def task_status(self, cmd_id: int) -> TaskStatus:
         task = self._find_task(cmd_id)
         if task is None:
             return TaskStatus.NOT_STARTED
 
-        state = task['state']
+        state = task.state
 
         if state == 'done':
             return TaskStatus.FINISHED_SUCCESS
@@ -97,10 +102,10 @@ class RequestsRowentaClient(RowentaClient):
 
         return TaskStatus.RUNNING
 
-    def is_docked(self):
-        response = requests.get(f'{self.rowenta_endpoint}/get/status', timeout=60)
-        response_json = response.json()
-        return response_json['mode'] == 'ready' and response_json['charging'] != 'unconnected'
+    def is_docked(self) -> bool:
+        response = requests.get(f'{self.rowenta_endpoint}/get/status', timeout=5)
+        res = StatusModel.model_validate_json(response.content)
+        return res.mode == 'ready' and res.charging != 'unconnected'
 
 
 class CleaningResult(Enum):
@@ -124,6 +129,9 @@ class RowentaCleaner:
         running_conditions = list(filter(lambda c: c.should_recheck(), conditions))
 
         cmd_id = self.rowenta_client.clean_house()
+        if cmd_id is None:
+            logger.info('Cleaning request failed. Will reattempt later.')
+            return CleaningResult.FAILURE
 
         logger.info('Started cleaning...')
 

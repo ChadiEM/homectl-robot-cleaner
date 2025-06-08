@@ -19,7 +19,7 @@ interrupted_event = threading.Event()
 CLEAN_CHECK_INTERVAL = datetime.timedelta(minutes=1)
 
 
-def sleep_until_tomorrow():
+def sleep_until_tomorrow() -> None:
     now = datetime.datetime.now()
     next_run = datetime.datetime.combine(now, START)
 
@@ -30,7 +30,7 @@ def sleep_until_tomorrow():
     interrupted_event.wait((next_run - now).total_seconds())
 
 
-def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_client: RowentaClient):
+def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_client: RowentaClient) -> None:
     logger.info('Cleaner started.')
 
     conditions: list[Condition] = [
@@ -61,6 +61,6 @@ def start(influx_client: InfluxClient, network_scanner: NetworkScanner, rowenta_
             raise Exception('Invalid cleaning result.')
 
 
-def interrupt():
+def interrupt() -> None:
     logger.info('Cleaner interrupted!')
     interrupted_event.set()

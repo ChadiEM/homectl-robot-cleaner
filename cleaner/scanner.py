@@ -18,7 +18,7 @@ class NetworkScanner(abc.ABC):
 
 
 class RequestsNetworkScanner(NetworkScanner):
-    def __init__(self):
+    def __init__(self) -> None:
         self.scanner_endpoint = os.getenv('NETWORK_SCANNER_ENDPOINT')
 
     def get_status(self, ip: str) -> StatusResponse:

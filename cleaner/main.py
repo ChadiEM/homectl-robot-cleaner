@@ -11,18 +11,18 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname
 logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     logger.info('Started.')
 
     with InfluxAPIClient() as influx_client:
         robot_cleaner.start(influx_client, RequestsNetworkScanner(), RequestsRowentaClient())
 
 
-def interrupt():
+def interrupt() -> None:
     robot_cleaner.interrupt()
 
 
-def __stop(_signum, _frame):
+def __stop(_signum, _frame) -> None:  # type:ignore[no-untyped-def]
     interrupt()
 
 

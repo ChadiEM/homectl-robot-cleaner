@@ -11,8 +11,9 @@ packages = [{ include = "cleaner" }]
 python = "^3.11"
 influxdb-client = "1.49.0"
 requests = "2.32.3"
+pydantic = "^2.11.5"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 flake8 = "7.2.0"
 flask = "3.1.1"
 mypy = "1.16.0"
@@ -29,5 +30,15 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
+plugins = ['pydantic.mypy']
 ignore_missing_imports = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
 check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+warn_unreachable = true
+warn_redundant_casts = true
+

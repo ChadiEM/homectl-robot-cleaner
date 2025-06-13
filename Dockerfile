@@ -11,9 +11,14 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --without dev --no-root --no-cache
 
-FROM python:3.13-alpine
+FROM python:3.13-slim-bookworm
 
-RUN apk --no-cache upgrade && apk --no-cache add tzdata
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
 
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"

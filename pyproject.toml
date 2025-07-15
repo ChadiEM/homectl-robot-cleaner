@@ -16,7 +16,7 @@ pydantic = "^2.11.5"
 [tool.poetry.group.dev.dependencies]
 flake8 = "7.3.0"
 flask = "3.1.1"
-mypy = "1.16.1"
+mypy = "1.17.0"
 pytest = "8.4.1"
 testcontainers = "4.10.0"
 types-requests = "2.32.4.20250611"

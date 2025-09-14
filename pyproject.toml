@@ -19,7 +19,7 @@ flask = "3.1.2"
 mypy = "1.17.1"
 pytest = "8.4.2"
 testcontainers = "4.13.0"
-types-requests = "2.32.4.20250809"
+types-requests = "2.32.4.20250913"
 Werkzeug = "3.1.3"
 
 [tool.poetry.scripts]

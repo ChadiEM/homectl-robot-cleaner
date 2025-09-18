@@ -69,7 +69,7 @@ class TimeWithDayOfWeek(BaseModel):
 
 class StatusModel(BaseModel):
     voltage: int
-    mode: Literal["ready", "cleaning", "go_home"]
+    mode: Literal["ready", "cleaning", "go_home", "not_ready"]
     cleaning_parameter_set: int
     battery_level: int
     charging: Literal["connected", "unconnected"]

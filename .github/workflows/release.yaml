@@ -10,7 +10,7 @@ on:
 
 env:
   # renovate: datasource=pypi depName=poetry
-  POETRY_VERSION: 2.2.0
+  POETRY_VERSION: 2.2.1
 
 jobs:
   release:

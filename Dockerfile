@@ -1,4 +1,4 @@
-FROM python:3.13-bookworm AS builder
+FROM python:3.14-bookworm AS builder
 
 # renovate: datasource=pypi depName=poetry
 ENV POETRY_VERSION=2.2.1
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --without dev --no-root --no-cache
 
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 RUN apt-get update && \
     apt-get upgrade -y && \

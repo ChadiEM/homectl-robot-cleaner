@@ -20,7 +20,7 @@ mypy = "1.18.2"
 pytest = "9.0.1"
 testcontainers = "4.13.3"
 types-requests = "2.32.4.20250913"
-Werkzeug = "3.1.3"
+Werkzeug = "3.1.4"
 
 [tool.poetry.scripts]
 release = "release:release"

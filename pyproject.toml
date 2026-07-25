@@ -18,7 +18,7 @@ flake8 = "7.3.0"
 flask = "3.1.3"
 mypy = "2.3.0"
 pytest = "9.1.1"
-testcontainers = "4.14.2"
+testcontainers = "4.15.0"
 types-requests = "2.33.0.20260712"
 Werkzeug = "3.1.8"
 

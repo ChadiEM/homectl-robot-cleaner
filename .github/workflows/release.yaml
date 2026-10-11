@@ -25,7 +25,7 @@ jobs:
           git config user.email github-actions@github.com
       - uses: actions/setup-python@v7
         with:
-          python-version: 3.14
+          python-version: 3.15
       - name: Install poetry
         uses: abatilo/actions-poetry@v4
         with:

@@ -93,14 +93,14 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2026.10.18"
+version = "2026.10.23"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
 groups = ["main", "dev"]
 files = [
-    {file = "certifi-2026.10.18-py3-none-any.whl", hash = "sha256:73191c47aaa79da394e8fee2dbc2ec827432cab56311122c9e47abf79e390f62"},
-    {file = "certifi-2026.10.18.tar.gz", hash = "sha256:b9995d97b64d0431a5af837d8ca8cd6238104d1f319f04bd93ea43124d6c861e"},
+    {file = "certifi-2026.10.23-py3-none-any.whl", hash = "sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1"},
+    {file = "certifi-2026.10.23.tar.gz", hash = "sha256:a9895e6e2758b371e0545e321a3a8fd1fcfd9829ada8824a936dfb16aaaf36cd"},
 ]
 
 [[package]]
@@ -1143,18 +1143,19 @@ dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests
 
 [[package]]
 name = "python-dateutil"
-version = "2.9.0.post0"
+version = "3.0.0"
 description = "Extensions to the standard Python datetime module"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
 files = [
-    {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
-    {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
+    {file = "python_dateutil-3.0.0-py2.py3-none-any.whl", hash = "sha256:3c79630202e4152c6add678446984236efe4f57e84d8e892aab0637bab82e9fd"},
+    {file = "python_dateutil-3.0.0.tar.gz", hash = "sha256:7ebcb3c29a92f3ceafe79a7a48a5c45677e9e004bbeec5742ac0bbb00560b7a2"},
 ]
 
 [package.dependencies]
-six = ">=1.5"
+six = ">=1.6"
+tzdata = "*"
 
 [[package]]
 name = "python-dotenv"
@@ -1205,14 +1206,14 @@ files = [
 
 [[package]]
 name = "reactivex"
-version = "6.0.0"
+version = "6.1.0"
 description = "ReactiveX (Rx) for Python"
 optional = false
 python-versions = "<4.0,>=3.11"
 groups = ["main"]
 files = [
-    {file = "reactivex-6.0.0-py3-none-any.whl", hash = "sha256:ae3c021aa7b29b502cf932f5f15c35d7753f74fabc8256232ff0883a1fd911d6"},
-    {file = "reactivex-6.0.0.tar.gz", hash = "sha256:843ce6a7d8aa82bf369915e1e2c9e19154dbd30c7974ee981fd90edd88bd9fcf"},
+    {file = "reactivex-6.1.0-py3-none-any.whl", hash = "sha256:9f3519afb08b122b2e2130b8811319f97cd4e2e432cab4a321cae0b3ee516a56"},
+    {file = "reactivex-6.1.0.tar.gz", hash = "sha256:09c856a3d727a08331e891d4af360b8a0069f34391957f21e417e62ffe81518c"},
 ]
 
 [package.dependencies]
@@ -1349,6 +1350,18 @@ files = [
 
 [package.dependencies]
 typing-extensions = ">=4.15.0"
+
+[[package]]
+name = "tzdata"
+version = "2026.5"
+description = "Provider of IANA time zone data"
+optional = false
+python-versions = ">=2"
+groups = ["main"]
+files = [
+    {file = "tzdata-2026.5-py2.py3-none-any.whl", hash = "sha256:b683bd1b6659ddcd810ff02ad09ba821d4bf1065072805063eb35c49617905ac"},
+    {file = "tzdata-2026.5.tar.gz", hash = "sha256:8cc73c0a0bfca7dbfa59235d60b2eff82231dee33f53d206db1acd9173cfc0a7"},
+]
 
 [[package]]
 name = "urllib3"
